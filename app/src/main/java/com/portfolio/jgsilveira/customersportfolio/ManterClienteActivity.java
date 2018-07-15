@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
+import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DeviceUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DialogUtil;
@@ -66,6 +68,7 @@ public class ManterClienteActivity extends AppCompatActivity {
         mViewModel.getCliente(idCliente).observe(this, new ClienteObserver());
         mViewModel.getProcessando().observe(this, new ProcessamentoObserver());
         mViewModel.getMensagem().observe(this, new MensagemObserver());
+        //mudarPreferencia();
     }
 
     private void inicializarViews() {
@@ -156,6 +159,17 @@ public class ManterClienteActivity extends AppCompatActivity {
             }
         }, ano, mes, dia);
         dialog.show();
+    }
+
+    private void mudarPreferencia() {
+        SharedPreferences preferences =
+                getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString("ESTADO_PADRAO", EnumEstados.PARANA.getSigla());
+        edit.apply();
+        edit.commit();
+        Log.d("opa", preferences.getString("ESTADO_PADRAO",
+                EnumEstados.SANTA_CATARINA.getSigla()));
     }
 
     public static Intent newIntent(Context context, int id) {

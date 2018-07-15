@@ -10,6 +10,8 @@ import com.portfolio.jgsilveira.customersportfolio.R;
 import com.portfolio.jgsilveira.customersportfolio.dao.ClienteDao;
 import com.portfolio.jgsilveira.customersportfolio.database.AsyncDatabaseTransactionTask;
 import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
+import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
+import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 
 import java.util.Date;
@@ -67,15 +69,12 @@ public class ClienteViewModel extends AppViewModel {
 
     private void inserir(final Cliente cliente) {
         Objects.requireNonNull(cliente).setDataHoraCadastro(new Date());
+        String uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
+        Objects.requireNonNull(cliente).setUf(uf);
         getDatabase().runInTransaction(new Runnable() {
             @Override
             public void run() {
                 mDao.insert(cliente);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
@@ -85,11 +84,6 @@ public class ClienteViewModel extends AppViewModel {
             @Override
             public void run() {
                 mDao.update(cliente);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
@@ -107,7 +101,6 @@ public class ClienteViewModel extends AppViewModel {
         valor.setCpf(cliente.getCpf());
         valor.setDataNascimento(cliente.getDataNascimento());
         valor.setRg(cliente.getRg());
-        //TODO Configuração valor.setUf(StringUtil.VAZIO);
     }
 
     private void gravarAsincrono() {
@@ -127,11 +120,11 @@ public class ClienteViewModel extends AppViewModel {
         }
         String uf;
         if (TextUtils.isEmpty(cliente.getUf())) {
-            uf = "SC"; //TODO Configuração
+            uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
         } else {
             uf = cliente.getUf();
         }
-        return "SC".equals(uf);
+        return EnumEstados.SANTA_CATARINA.getSigla().equals(uf);
     }
 
     private boolean isParanaense() {
@@ -142,11 +135,11 @@ public class ClienteViewModel extends AppViewModel {
         String uf;
         boolean inserindo = cliente.getId() == 0;
         if (inserindo) {
-            uf = "SC"; //TODO Configuração
+            uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
         } else {
             uf = cliente.getUf();
         }
-        return "PR".equals(uf);
+        return EnumEstados.PARANA.getSigla().equals(uf);
     }
 
     private boolean hasAnyTaskRunning() {
