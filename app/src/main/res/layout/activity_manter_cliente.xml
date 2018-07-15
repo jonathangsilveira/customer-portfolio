@@ -95,20 +95,9 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/container_progressBar"
+    <include
+        layout="@layout/container_progressbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#33000000"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:indeterminate="true"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

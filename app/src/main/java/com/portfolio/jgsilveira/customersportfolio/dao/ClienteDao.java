@@ -18,10 +18,12 @@ public interface ClienteDao extends BaseDao<Cliente> {
     @Query("SELECT * FROM Cliente")
     List<Cliente> queryAll();
 
-    @Query("SELECT * FROM Cliente WHERE nome LIKE :nome AND data_nascimento = :dataNascimento AND " +
-            "data_hora_cadastro >= :dataInicio AND data_hora_cadastro <= :dataFim")
-    List<Cliente> queryWithParameters(String nome, Date dataNascimento, Date dataInicio,
-                                      Date dataFim);
+    @Query("SELECT * FROM Cliente " +
+            "WHERE (IFNULL(:name, '') = '' OR nome LIKE :name) " +
+            "AND (:birthDate IS NULL OR data_nascimento = :birthDate) " +
+            "AND (:startDate IS NULL OR data_hora_cadastro >= :startDate) " +
+            "AND (:endDate IS NULL OR data_hora_cadastro <= :endDate)")
+    List<Cliente> queryWithParameters(String name, Date birthDate, Date startDate, Date endDate);
 
     @Query("SELECT * FROM Cliente WHERE id = :id")
     @Nullable

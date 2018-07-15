@@ -12,4 +12,11 @@
     <string name="erro">Erro</string>
     <string name="ok">Ok</string>
     <string name="mascara_data">__/__/____</string>
+    <string name="relatorio">Relatório</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="cadastrado">Cadastrado</string>
+    <string name="nome">Nome</string>
+    <string name="uf">UF</string>
+    <string name="label_cadastrado_em">Cadastrado em:</string>
+    <string name="label_ate">Até</string>
 </resources>

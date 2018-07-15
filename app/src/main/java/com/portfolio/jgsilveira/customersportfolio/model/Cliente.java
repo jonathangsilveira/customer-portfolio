@@ -31,6 +31,8 @@ public class Cliente {
 
     private String uf;
 
+    private String telefone;
+
     public long getId() {
         return id;
     }
@@ -85,6 +87,14 @@ public class Cliente {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
 }

@@ -101,6 +101,7 @@ public class ClienteViewModel extends AppViewModel {
         valor.setCpf(cliente.getCpf());
         valor.setDataNascimento(cliente.getDataNascimento());
         valor.setRg(cliente.getRg());
+        valor.setTelefone(cliente.getTelefone());
     }
 
     private void gravarAsincrono() {

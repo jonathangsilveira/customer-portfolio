@@ -106,7 +106,6 @@ public class ManterClienteActivity extends AppCompatActivity {
         } catch (BusinessException e) {
             DialogUtil.showWarningDialog(this, e.getMessage());
         } catch (Exception e) {
-            Log.e("opa", e.getMessage(), e);
             DialogUtil.showErrorDialog(this, e.getMessage());
         }
     }
@@ -120,6 +119,7 @@ public class ManterClienteActivity extends AppCompatActivity {
                     DateUtil.converterParaData(mEditTextNascimento.getText().toString()));
         }
         cliente.setRg(mEditTextRg.getText().toString());
+        cliente.setTelefone(mEditTextTelefone.getText().toString());
         return cliente;
     }
 
@@ -172,7 +172,7 @@ public class ManterClienteActivity extends AppCompatActivity {
                 EnumEstados.SANTA_CATARINA.getSigla()));
     }
 
-    public static Intent newIntent(Context context, int id) {
+    public static Intent newIntent(Context context, long id) {
         Intent intent = new Intent(context, ManterClienteActivity.class);
         intent.putExtra(ID_CLIENTE, id);
         return intent;
