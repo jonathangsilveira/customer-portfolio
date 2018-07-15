@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cadastro_gravado">Cadastro gravado!</string>
+    <string name="campo_obrigatorio_nao_informado">Campo obrigatório [%s] não informado!</string>
+    <string name="dados_invalidos_menor_de_idade">Não é permitido cadastrar menores de idade</string>
+</resources>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_manter_cliente"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManterClienteActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_margin_vertical"
+        android:layout_marginBottom="@dimen/activity_margin_vertical"
+        android:layout_marginStart="@dimen/activity_margin_horizontal"
+        android:layout_marginEnd="@dimen/activity_margin_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_nome" />
+
+        <EditText
+            android:id="@+id/activity_manter_cliente_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/label_nome"
+            android:lines="1"
+            android:inputType="textCapWords" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_cpf" />
+
+        <EditText
+            android:id="@+id/activity_manter_cliente_cpf"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/label_cpf"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_data_nascimento" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/activity_manter_cliente_nascimento"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="date"/>
+
+            <ImageButton
+                android:id="@+id/activity_manter_cliente_calendario"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_rg" />
+
+        <EditText
+            android:id="@+id/activity_manter_cliente_rg"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/label_rg"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_telefone"/>
+
+        <EditText
+            android:id="@+id/activity_manter_cliente_telefone"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:inputType="phone"/>
+
+        <Button
+            android:id="@+id/activity_manter_cliente_gravar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gravar"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="true"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</RelativeLayout>

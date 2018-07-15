@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">CustomersPortfolio</string>
+    <string name="title_activity_lista_clientes">ListaClientesActivity</string>
+    <string name="label_nome">Nome:</string>
+    <string name="label_cpf">CPF:</string>
+    <string name="label_data_nascimento">Data nascimento:</string>
+    <string name="label_rg">RG:</string>
+    <string name="gravar">Gravar</string>
+    <string name="label_telefone">Telefone:</string>
+    <string name="manter_cliente">Manter Cliente</string>
+    <string name="alerta">Alerta</string>
+    <string name="erro">Erro</string>
+    <string name="ok">Ok</string>
+    <string name="mascara_data">__/__/____</string>
+</resources>
