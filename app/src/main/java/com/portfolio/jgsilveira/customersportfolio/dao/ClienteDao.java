@@ -19,7 +19,7 @@ public interface ClienteDao extends BaseDao<Cliente> {
     List<Cliente> queryAll();
 
     @Query("SELECT * FROM Cliente " +
-            "WHERE (IFNULL(:name, '') = '' OR LOWER(nome) LIKE LOWER('%:name%')) " +
+            "WHERE (:name IS NULL OR nome LIKE :name) " +
             "AND (:birthDate IS NULL OR data_nascimento = :birthDate) " +
             "AND (:startDate IS NULL OR data_hora_cadastro >= :startDate) " +
             "AND (:endDate IS NULL OR data_hora_cadastro <= :endDate)")

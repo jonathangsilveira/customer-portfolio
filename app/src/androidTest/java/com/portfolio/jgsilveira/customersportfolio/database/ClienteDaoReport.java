@@ -33,11 +33,9 @@ public class ClienteDaoReport {
     @Test
     public void queryWithParameters() {
         ClienteDao dao = mDatabase.clienteDao();
-        String name = "%e%";
-        Date startDate = DateUtil.createDate(1990, Calendar.JANUARY, 15);
-        Date endDate = DateUtil.createDate(1990, Calendar.JANUARY, 15);
+        String name = "Pedro";
 
-        List<Cliente> clientes = dao.queryWithParameters(name, null, startDate, endDate);
+        List<Cliente> clientes = dao.queryWithParameters(name, null, null, null);
 
         Assert.assertFalse(clientes.isEmpty());
     }

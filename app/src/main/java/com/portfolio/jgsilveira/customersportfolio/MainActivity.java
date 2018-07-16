@@ -3,10 +3,13 @@ package com.portfolio.jgsilveira.customersportfolio;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,10 +23,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle(R.string.customers_portfolio);
         AppSettings.getPreferences(getApplicationContext());
+        initToolbar();
         initReferences();
         initListeners();
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.customers_portfolio);
+        setSupportActionBar(toolbar);
     }
 
     private void initReferences() {
