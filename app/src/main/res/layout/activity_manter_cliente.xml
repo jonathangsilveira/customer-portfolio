@@ -7,7 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ManterClienteActivity">
 
+    <include layout="@layout/action_bar"
+        android:id="@+id/activity_manter_cliente_action_bar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
+        android:layout_below="@+id/activity_manter_cliente_action_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/activity_margin_vertical"
@@ -86,12 +93,6 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:inputType="phone"/>
-
-        <Button
-            android:id="@+id/activity_manter_cliente_gravar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/gravar"/>
 
     </LinearLayout>
 

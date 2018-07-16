@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_add"
+        android:title="@string/adicionar"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_edit"
+        android:title="@string/editar"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_save"
+        android:title="@string/gravar"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_cancel"
+        android:title="@string/cancelar"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/configuracoes"
+        app:showAsAction="never" />
+
+</menu>

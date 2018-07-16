@@ -6,11 +6,11 @@ public class FiltroRelatorio {
 
     private String nome;
 
-    private Date dataNascimento = new Date();
+    private Date dataNascimento;
 
-    private Date dataInicio = new Date();
+    private Date dataInicio;
 
-    private Date dataFim = new Date();
+    private Date dataFim;
 
     public String getNome() {
         return nome;

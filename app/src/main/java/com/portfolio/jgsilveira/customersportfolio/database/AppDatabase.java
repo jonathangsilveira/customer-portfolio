@@ -16,7 +16,7 @@ public final class AppDatabase {
 
     public static AppDatabaseFactory getInstance(Context context) {
         if (DATABASE == null) {
-            String databaseName = context.getString(R.string.app_name);
+            String databaseName = "CustomersPortfolio";//context.getString(R.string.app_name);
             RoomDatabase.Builder<AppDatabaseFactory> databseBuilder =
                     databaseBuilder(context, AppDatabaseFactory.class, databaseName);
             DATABASE = databseBuilder.build();
@@ -24,8 +24,9 @@ public final class AppDatabase {
         return DATABASE;
     }
 
-    protected static AppDatabaseFactory getInMemoryDatabase(Context context) {
-        return Room.inMemoryDatabaseBuilder(context, AppDatabaseFactory.class).build();
+    static AppDatabaseFactory getInMemoryDatabase(Context context) {
+        return Room.inMemoryDatabaseBuilder(context, AppDatabaseFactory.class)
+                .allowMainThreadQueries().build();
     }
 
     public static void closeQuietly() {

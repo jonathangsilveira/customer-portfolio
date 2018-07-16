@@ -19,4 +19,9 @@
     <string name="uf">UF</string>
     <string name="label_cadastrado_em">Cadastrado em:</string>
     <string name="label_ate">Até</string>
+    <string name="gerar">Gerar</string>
+    <string name="label_uf">UF:</string>
+    <string name="editar">Editar</string>
+    <string name="adicionar">adicionar</string>
+    <string name="cancelar">cancelar</string>
 </resources>

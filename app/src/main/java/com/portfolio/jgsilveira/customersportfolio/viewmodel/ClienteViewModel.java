@@ -27,6 +27,8 @@ public class ClienteViewModel extends AppViewModel {
 
     private long mId;
 
+    private MutableLiveData<Boolean> mEditando = new MutableLiveData<>();
+
     public ClienteViewModel(@NonNull Application application) {
         super(application);
         init();
@@ -42,14 +44,35 @@ public class ClienteViewModel extends AppViewModel {
             if (id > 0) {
                 atualizarCliente(id);
             } else {
-                mCliente.postValue(new Cliente());
+                novoCliente();
             }
         }
         return mCliente;
     }
 
+    public void novoCliente() {
+        mEditando.setValue(true);
+        mCliente.postValue(new Cliente());
+        mId = 0;
+    }
+
+    public boolean isEditando() {
+        return mId > 0;
+    }
+
+    public MutableLiveData<Boolean> getEditando() {
+        return mEditando;
+    }
+
+    public void cancelarAlteracoes() {
+        mEditando.setValue(false);
+        Cliente cliente = mCliente.getValue();
+        mCliente.setValue(cliente);
+    }
+
     private void atualizarCliente(long id) {
         mId = id;
+        mEditando.setValue(false);
         buscarCliente();
     }
 
@@ -74,7 +97,7 @@ public class ClienteViewModel extends AppViewModel {
         getDatabase().runInTransaction(new Runnable() {
             @Override
             public void run() {
-                mDao.insert(cliente);
+                mId = mDao.insert(cliente);
             }
         });
     }
@@ -193,6 +216,7 @@ public class ClienteViewModel extends AppViewModel {
         @Override
         public void onPostTransaction(boolean success, String message) {
             mProcessando.setValue(false);
+            mEditando.setValue(false);
             if (success) {
                 mMensagem.setValue(getString(R.string.cadastro_gravado));
             }
@@ -201,6 +225,7 @@ public class ClienteViewModel extends AppViewModel {
         @Override
         public void onCancelTransaction() {
             mProcessando.setValue(false);
+            mEditando.setValue(false);
         }
 
     }

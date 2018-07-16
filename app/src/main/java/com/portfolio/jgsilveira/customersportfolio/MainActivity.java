@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                onConfiguracoesClicked();
             }
         });
     }
@@ -58,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onRelatorioClicked() {
-        //TODO
+        startActivity(RelatorioActivity.newIntent(this));
     }
 
     private void onConfiguracoesClicked() {
-        //TODO
+        Intent intent = ConfiguracoesActivity.newIntent(this);
+        startActivity(intent);
     }
 
 }

@@ -39,6 +39,7 @@ public class RelatorioViewModel extends AppViewModel {
 
     private void init() {
         mDao = getDatabase().clienteDao();
+        getFiltro();
     }
 
     public LiveData<FiltroRelatorio> getFiltro() {
@@ -91,13 +92,7 @@ public class RelatorioViewModel extends AppViewModel {
         public void onPostTransaction(boolean success, String message) {
             mProcessando.setValue(false);
             if (success) {
-                List<Cliente> value = mResultado.getValue();
-                if (value != null) {
-                    value.clear();
-                    value.addAll(mClientes);
-                } else {
-                    mResultado.setValue(mClientes);
-                }
+                mResultado.setValue(mClientes);
             } else {
                 mMensagem.setValue(getString(R.string.nenhum_resultado_encontrado));
             }

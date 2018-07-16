@@ -1,39 +1,36 @@
 package com.portfolio.jgsilveira.customersportfolio;
 
 import android.app.DatePickerDialog;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
-import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DeviceUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DialogUtil;
 import com.portfolio.jgsilveira.customersportfolio.viewmodel.BusinessException;
-import com.portfolio.jgsilveira.customersportfolio.viewmodel.CampoObrigatorioNaoInformadoException;
 import com.portfolio.jgsilveira.customersportfolio.viewmodel.ClienteViewModel;
-import com.portfolio.jgsilveira.customersportfolio.viewmodel.MenorIdadeException;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class ManterClienteActivity extends AppCompatActivity {
 
@@ -53,22 +50,75 @@ public class ManterClienteActivity extends AppCompatActivity {
 
     private ViewGroup mContainerProgressbar;
 
-    private Button mButtonGravar;
-
     private ImageButton mImageButtonCalendario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manter_cliente);
+        inicializarToolbar();
         inicializarViews();
         inicializarListeners();
-        int idCliente = getIntent().getIntExtra(ID_CLIENTE, 0);
+        long idCliente = getIntent().getLongExtra(ID_CLIENTE, 0);
         mViewModel = ViewModelProviders.of(this).get(ClienteViewModel.class);
         mViewModel.getCliente(idCliente).observe(this, new ClienteObserver());
         mViewModel.getProcessando().observe(this, new ProcessamentoObserver());
         mViewModel.getMensagem().observe(this, new MensagemObserver());
-        //mudarPreferencia();
+        mViewModel.getEditando().observe(this, new EdicaoObserver());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.manter_cliente_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                onAdicionar();
+                break;
+            case R.id.action_edit:
+                onEditar();
+                break;
+            case R.id.action_save:
+                gravar();
+                break;
+            case R.id.action_cancel:
+                cancelarAlteracoes();
+                break;
+            case R.id.action_settings:
+                configuracoes();
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MutableLiveData<Boolean> editando = mViewModel.getEditando();
+        Boolean isEditando = editando.getValue() != null && editando.getValue();
+        if (isEditando) {
+            menu.findItem(R.id.action_add).setVisible(false);
+            menu.findItem(R.id.action_edit).setVisible(false);
+            menu.findItem(R.id.action_save).setVisible(true);
+            menu.findItem(R.id.action_cancel).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_add).setVisible(true);
+            menu.findItem(R.id.action_edit).setVisible(mViewModel.isEditando());
+            menu.findItem(R.id.action_save).setVisible(false);
+            menu.findItem(R.id.action_cancel).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void inicializarToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.manter_cliente);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
+
     }
 
     private void inicializarViews() {
@@ -78,23 +128,41 @@ public class ManterClienteActivity extends AppCompatActivity {
         mEditTextRg = findViewById(R.id.activity_manter_cliente_rg);
         mEditTextTelefone = findViewById(R.id.activity_manter_cliente_telefone);
         mContainerProgressbar = findViewById(R.id.container_progressBar);
-        mButtonGravar = findViewById(R.id.activity_manter_cliente_gravar);
         mImageButtonCalendario = findViewById(R.id.activity_manter_cliente_calendario);
     }
 
     private void inicializarListeners() {
-        mButtonGravar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gravar();
-            }
-        });
         mImageButtonCalendario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarCalendario();
             }
         });
+    }
+
+    private void habilitarViews(boolean habilitar) {
+        mEditTextNome.setEnabled(habilitar);
+        mEditTextCpf.setEnabled(habilitar);
+        mEditTextRg.setEnabled(habilitar);
+        mEditTextTelefone.setEnabled(habilitar);
+        mImageButtonCalendario.setEnabled(habilitar);
+    }
+
+    private void cancelarAlteracoes() {
+        mViewModel.cancelarAlteracoes();
+    }
+
+    private void onEditar() {
+        mViewModel.getEditando().setValue(true);
+    }
+
+    private void onAdicionar() {
+        mViewModel.novoCliente();
+    }
+
+    private void configuracoes() {
+        Intent intent = ConfiguracoesActivity.newIntent(this);
+        startActivity(intent);
     }
 
     private void gravar() {
@@ -133,7 +201,7 @@ public class ManterClienteActivity extends AppCompatActivity {
                 mEditTextNascimento.setText(DateUtil.formatarData(cliente.getDataNascimento()));
             }
             mEditTextRg.setText(cliente.getRg());
-            mEditTextTelefone.getText().clear();
+            mEditTextTelefone.setText(cliente.getTelefone());
         }
     }
 
@@ -159,17 +227,6 @@ public class ManterClienteActivity extends AppCompatActivity {
             }
         }, ano, mes, dia);
         dialog.show();
-    }
-
-    private void mudarPreferencia() {
-        SharedPreferences preferences =
-                getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putString("ESTADO_PADRAO", EnumEstados.PARANA.getSigla());
-        edit.apply();
-        edit.commit();
-        Log.d("opa", preferences.getString("ESTADO_PADRAO",
-                EnumEstados.SANTA_CATARINA.getSigla()));
     }
 
     public static Intent newIntent(Context context, long id) {
@@ -210,6 +267,17 @@ public class ManterClienteActivity extends AppCompatActivity {
                     mContainerProgressbar.setVisibility(View.GONE);
                 }
             }
+        }
+
+    }
+
+    private class EdicaoObserver implements Observer<Boolean> {
+
+        @Override
+        public void onChanged(@Nullable Boolean editing) {
+            supportInvalidateOptionsMenu();
+            boolean isEditando = editing != null && editing;
+            habilitarViews(isEditando);
         }
 
     }

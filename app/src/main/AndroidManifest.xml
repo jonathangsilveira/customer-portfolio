@@ -11,9 +11,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,16 +23,26 @@
         <activity
             android:name=".ListaClientesActivity"
             android:label="@string/title_activity_lista_clientes"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ManterClienteActivity"
             android:label="@string/manter_cliente"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".RelatorioActivity"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".RelatorioActivity"
+            android:label="@string/relatorio"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".ConfiguracoesActivity"
+            android:label="@string/configuracoes"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
     </application>
 
 </manifest>

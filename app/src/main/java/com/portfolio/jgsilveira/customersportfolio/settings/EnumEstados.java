@@ -17,8 +17,12 @@ public enum EnumEstados {
         return mSigla;
     }
 
-    public String getmDescricao() {
+    public String getDescricao() {
         return mDescricao;
     }
 
+    @Override
+    public String toString() {
+        return mDescricao;
+    }
 }

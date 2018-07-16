@@ -48,4 +48,26 @@ public class DateUtil {
         return dateInstance.parse(valor);
     }
 
+    public static Date truncateDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    public static Date createDate(int year, int month, int dayOfMonth, int hour,
+                                  int minutes, int seconds) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth, hour, minutes, seconds);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    public static Date createDate(int year, int month, int dayOfMonth) {
+        return createDate(year, month, dayOfMonth, 0, 0, 0);
+    }
+
 }
