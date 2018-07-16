@@ -1,10 +1,10 @@
 package com.portfolio.jgsilveira.customersportfolio;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,13 +13,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,14 +31,14 @@ import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
 import com.portfolio.jgsilveira.customersportfolio.model.FiltroRelatorio;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DeviceUtil;
+import com.portfolio.jgsilveira.customersportfolio.util.DialogUtil;
 import com.portfolio.jgsilveira.customersportfolio.viewmodel.RelatorioViewModel;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class RelatorioActivity extends AppCompatActivity {
 
@@ -54,13 +56,9 @@ public class RelatorioActivity extends AppCompatActivity {
 
     private ImageButton mImageButtonCalendarioCadastradoAte;
 
-    private TimePickerDialog mTimePickerCadastrado;
-
     private RelatorioViewModel mViewModel;
 
     private RecyclerView mRecyclerViewResultado;
-
-    private Button mButtonGerar;
 
     private ViewGroup mContainerProgressbar;
 
@@ -68,6 +66,7 @@ public class RelatorioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relatorio);
+        initToolbar();
         initReferences();
         initListeners();
         setupRecyclerView();
@@ -78,9 +77,18 @@ public class RelatorioActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        DeviceUtil.hideKeyboard(this);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.relatorio_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_gerar) {
+            DeviceUtil.hideKeyboard(this);
+            mViewModel.gerarRelatorio();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static Intent newIntent(Context context) {
@@ -91,6 +99,13 @@ public class RelatorioActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerViewResultado.setLayoutManager(linearLayoutManager);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.relatorio);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
     }
 
     private void initReferences() {
@@ -105,7 +120,6 @@ public class RelatorioActivity extends AppCompatActivity {
         mImageButtonCalendarioCadastradoAte =
                 findViewById(R.id.activity_relatorio_calendario_cadastrado_ate);
         mRecyclerViewResultado = findViewById(R.id.activity_relatorio_resultados);
-        mButtonGerar = findViewById(R.id.activity_relatorio_gerar);
         mContainerProgressbar = findViewById(R.id.container_progressBar);
     }
 
@@ -115,30 +129,48 @@ public class RelatorioActivity extends AppCompatActivity {
         mImageButtonCalendarioCadastradoEm.setOnClickListener(new OnCalendarioCadastradoEmClick());
         mImageButtonCalendarioCadastradoAte
                 .setOnClickListener(new OnCalendarioCadastradoAteClick());
-        mButtonGerar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewModel.gerarRelatorio();
+    }
+
+    private void mostrarCalendarioAniversario() {
+        FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+        if (filtro != null) {
+            Date dataNascimento;
+            if (filtro.getDataNascimento() == null) {
+                dataNascimento = new Date();
+            } else {
+                dataNascimento = filtro.getDataNascimento();
             }
-        });
+            DialogUtil.showDatePickerDialog(this, dataNascimento,
+                    new OnBirthdateSetListener(), new OnClearBirthDateListener());
+        }
     }
 
-    private void mostrarCalendario(Date data, DatePickerDialog.OnDateSetListener listener) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(data);
-        int ano = calendar.get(Calendar.YEAR);
-        int mes = calendar.get(Calendar.MONTH);
-        int diaMes = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog mDatePickerNascimento = new DatePickerDialog(this, listener, ano, mes, diaMes);
-        mDatePickerNascimento.show();
+    private void mostrarCalendarioInicio() {
+        FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+        if (filtro != null) {
+            Date dataInicio;
+            if (filtro.getDataInicio() == null) {
+                dataInicio = new Date();
+            } else {
+                dataInicio = filtro.getDataInicio();
+            }
+            DialogUtil.showDatePickerDialog(this, dataInicio,
+                    new OnStartRecordDateSetListener(), new OnClearStartRecordDateListener());
+        }
     }
 
-    private void mostrarHorario(Date data, TimePickerDialog.OnTimeSetListener listener) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(data);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minutes = calendar.get(Calendar.MINUTE);
-        int seconds = calendar.get(Calendar.SECOND);
+    private void mostrarCalendarioFim() {
+        FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+        if (filtro != null) {
+            Date dataInicio;
+            if (filtro.getDataFim() == null) {
+                dataInicio = new Date();
+            } else {
+                dataInicio = filtro.getDataFim();
+            }
+            DialogUtil.showDatePickerDialog(this, dataInicio,
+                    new OnEndRecordDateSetListener(), new OnClearEndRecordDateListener());
+        }
     }
 
     private void apresentarMensagem(String mensagem) {
@@ -154,7 +186,7 @@ public class RelatorioActivity extends AppCompatActivity {
             if (filtro != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
-                filtro.setDataNascimento(calendar.getTime());
+                filtro.setDataNascimento(DateUtil.truncateDate(calendar.getTime()));
                 mEditTextNascimento.setText(DateUtil.formatarData(filtro.getDataNascimento()));
             }
         }
@@ -168,7 +200,7 @@ public class RelatorioActivity extends AppCompatActivity {
             FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
             if (filtro != null) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth);
+                calendar.set(year, month, dayOfMonth, 23, 59, 59);
                 filtro.setDataInicio(calendar.getTime());
                 mEditTextCadastradoEm.setText(DateUtil.formatarData(filtro.getDataInicio()));
             }
@@ -184,9 +216,51 @@ public class RelatorioActivity extends AppCompatActivity {
             if (filtro != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
-                filtro.setDataFim(calendar.getTime());
-                mEditTextCadastradoEm.setText(DateUtil.formatarData(filtro.getDataFim()));
+                filtro.setDataFim(DateUtil.truncateDate(calendar.getTime()));
+                mEditTextCadastradoAte.setText(DateUtil.formatarData(filtro.getDataFim()));
             }
+        }
+
+    }
+
+    private class OnClearBirthDateListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            mEditTextNascimento.getText().clear();
+            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+            if (filtro != null) {
+                filtro.setDataNascimento(null);
+            }
+            dialogInterface.dismiss();
+        }
+
+    }
+
+    private class OnClearStartRecordDateListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            mEditTextCadastradoEm.getText().clear();
+            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+            if (filtro != null) {
+                filtro.setDataInicio(null);
+            }
+            dialogInterface.dismiss();
+        }
+
+    }
+
+    private class OnClearEndRecordDateListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            mEditTextCadastradoAte.getText().clear();
+            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
+            if (filtro != null) {
+                filtro.setDataFim(null);
+            }
+            dialogInterface.dismiss();
         }
 
     }
@@ -217,16 +291,7 @@ public class RelatorioActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
-            if (filtro != null) {
-                Date dataNascimento;
-                if (filtro.getDataNascimento() == null) {
-                    dataNascimento = new Date();
-                } else {
-                    dataNascimento = filtro.getDataNascimento();
-                }
-                mostrarCalendario(dataNascimento, new OnBirthdateSetListener());
-            }
+            mostrarCalendarioAniversario();
         }
 
     }
@@ -235,16 +300,7 @@ public class RelatorioActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
-            if (filtro != null) {
-                Date dataInicio;
-                if (filtro.getDataInicio() == null) {
-                    dataInicio = new Date();
-                } else {
-                    dataInicio = filtro.getDataInicio();
-                }
-                mostrarCalendario(dataInicio, new OnStartRecordDateSetListener());
-            }
+            mostrarCalendarioInicio();
         }
 
     }
@@ -253,16 +309,7 @@ public class RelatorioActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            FiltroRelatorio filtro = mViewModel.getFiltro().getValue();
-            if (filtro != null) {
-                Date dataFim;
-                if (filtro.getDataFim() == null) {
-                    dataFim = new Date();
-                } else {
-                    dataFim = filtro.getDataFim();
-                }
-                mostrarCalendario(dataFim, new OnEndRecordDateSetListener());
-            }
+            mostrarCalendarioFim();
         }
 
     }

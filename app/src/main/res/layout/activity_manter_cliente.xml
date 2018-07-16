@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/label_nome"
             android:lines="1"
+            android:maxLength="100"
             android:inputType="textCapWords" />
 
         <TextView
@@ -46,6 +47,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/label_cpf"
+            android:maxLength="11"
             android:inputType="number" />
 
         <TextView
@@ -67,7 +69,8 @@
             <ImageButton
                 android:id="@+id/activity_manter_cliente_calendario"
                 android:layout_width="48dp"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"
+                android:src="@drawable/baseline_calendar_today_black_24" />
 
         </LinearLayout>
 
@@ -81,6 +84,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/label_rg"
+            android:maxLength="8"
             android:inputType="number" />
 
         <TextView
@@ -92,7 +96,8 @@
             android:id="@+id/activity_manter_cliente_telefone"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:inputType="phone"/>
+            android:maxLength="11"
+            android:inputType="number"/>
 
     </LinearLayout>
 

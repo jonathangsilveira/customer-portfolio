@@ -29,4 +29,7 @@ public interface ClienteDao extends BaseDao<Cliente> {
     @Nullable
     Cliente queryById(long id);
 
+    @Query("SELECT 1 FROM Cliente WHERE cpf = :cpf")
+    boolean existsCpf(String cpf);
+
 }

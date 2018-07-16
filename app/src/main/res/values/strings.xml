@@ -22,6 +22,8 @@
     <string name="gerar">Gerar</string>
     <string name="label_uf">UF:</string>
     <string name="editar">Editar</string>
-    <string name="adicionar">adicionar</string>
-    <string name="cancelar">cancelar</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="limpar">Limpar</string>
+    <string name="customers_portfolio">Customers Portfolio</string>
 </resources>

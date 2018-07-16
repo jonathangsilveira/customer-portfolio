@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
 import com.portfolio.jgsilveira.customersportfolio.viewmodel.ConfiguracoesViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
+        initToolbar();
         mSpinnerEstado = findViewById(R.id.activity_configuracoes_estado);
         mSpinnerEstado.setOnItemSelectedListener(new OnEstadoSelected());
         mViewModel = ViewModelProviders.of(this).get(ConfiguracoesViewModel.class);
@@ -44,6 +47,13 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private ArrayAdapter<EnumEstados> newAdapter(List<EnumEstados> values) {
         return new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 android.R.id.text1, values);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.configuracoes);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
     }
 
     private class EstadoObserver implements Observer<List<EnumEstados>>{

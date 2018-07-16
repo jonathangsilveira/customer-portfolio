@@ -7,13 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".RelatorioActivity">
 
+    <include
+        android:id="@+id/activity_relatorio_action_bar"
+        layout="@layout/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
     <RelativeLayout
+        android:layout_below="@+id/activity_relatorio_action_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_margin_vertical"
         android:layout_marginBottom="@dimen/activity_margin_vertical"
-        android:layout_marginStart="@dimen/activity_margin_horizontal"
         android:layout_marginEnd="@dimen/activity_margin_horizontal"
+        android:layout_marginStart="@dimen/activity_margin_horizontal"
+        android:layout_marginTop="@dimen/activity_margin_vertical"
         android:orientation="vertical">
 
         <LinearLayout
@@ -25,18 +33,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_nome"/>
+                android:text="@string/label_nome" />
 
             <EditText
                 android:id="@+id/activity_relatorio_nome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lines="1"/>
+                android:lines="1" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_data_nascimento"/>
+                android:text="@string/label_data_nascimento" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,39 +55,33 @@
                     android:id="@+id/activity_relatorio_nascimento"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:enabled="false"/>
-                
+                    android:enabled="false" />
+
                 <ImageButton
                     android:id="@+id/activity_relatorio_calendario_nascimento"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_my_calendar"/>
-
-                <Button
-                    android:id="@+id/activity_relatorio_gerar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gerar"/>
+                    android:src="@drawable/baseline_calendar_today_black_24" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/label_cadastrado_em"/>
+                    android:text="@string/label_cadastrado_em" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="@string/label_ate"/>
+                    android:text="@string/label_ate" />
 
             </LinearLayout>
 
@@ -92,51 +94,51 @@
                     android:id="@+id/activity_relatorio_cadastrado_em"
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:enabled="false"/>
+                    android:enabled="false" />
 
                 <ImageButton
                     android:id="@+id/activity_relatorio_calendario_cadastrado_em"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_my_calendar"/>
+                    android:src="@drawable/baseline_calendar_today_black_24" />
 
                 <EditText
                     android:id="@+id/activity_relatorio_cadastrado_ate"
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:enabled="false"/>
+                    android:enabled="false" />
 
                 <ImageButton
                     android:id="@+id/activity_relatorio_calendario_cadastrado_ate"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_my_calendar"/>
+                    android:src="@drawable/baseline_calendar_today_black_24" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".4"
-                    android:text="@string/nome"/>
+                    android:text="@string/nome" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".4"
-                    android:text="@string/cadastrado"/>
+                    android:text="@string/cadastrado" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
-                    android:text="@string/uf"/>
+                    android:text="@string/uf" />
 
             </LinearLayout>
 
@@ -144,16 +146,16 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activity_relatorio_resultados"
-            android:layout_below="@+id/activity_relatorio_filtros"
-            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_relatorio_filtros"
+            android:scrollbars="vertical" />
 
     </RelativeLayout>
 
     <include
         layout="@layout/container_progressbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

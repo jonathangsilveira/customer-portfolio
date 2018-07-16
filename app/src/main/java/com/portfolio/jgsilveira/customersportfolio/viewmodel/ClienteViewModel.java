@@ -120,11 +120,13 @@ public class ClienteViewModel extends AppViewModel {
 
     private void atualizarValores(@NonNull Cliente cliente) {
         Cliente valor = mCliente.getValue();
-        valor.setNome(cliente.getNome());
-        valor.setCpf(cliente.getCpf());
-        valor.setDataNascimento(cliente.getDataNascimento());
-        valor.setRg(cliente.getRg());
-        valor.setTelefone(cliente.getTelefone());
+        if (valor != null) {
+            valor.setNome(cliente.getNome());
+            valor.setCpf(cliente.getCpf());
+            valor.setDataNascimento(cliente.getDataNascimento());
+            valor.setRg(cliente.getRg());
+            valor.setTelefone(cliente.getTelefone());
+        }
     }
 
     private void gravarAsincrono() {
@@ -190,6 +192,7 @@ public class ClienteViewModel extends AppViewModel {
             String mensagem = getString(R.string.dados_invalidos_menor_de_idade);
             throw new MenorIdadeException(mensagem);
         }
+
     }
 
     @Override

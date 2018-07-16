@@ -16,7 +16,7 @@ public final class AppDatabase {
 
     public static AppDatabaseFactory getInstance(Context context) {
         if (DATABASE == null) {
-            String databaseName = "CustomersPortfolio";//context.getString(R.string.app_name);
+            String databaseName = context.getString(R.string.app_name);
             RoomDatabase.Builder<AppDatabaseFactory> databseBuilder =
                     databaseBuilder(context, AppDatabaseFactory.class, databaseName);
             DATABASE = databseBuilder.build();

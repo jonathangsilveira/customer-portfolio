@@ -118,7 +118,6 @@ public class ManterClienteActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.manter_cliente);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
-
     }
 
     private void inicializarViews() {
