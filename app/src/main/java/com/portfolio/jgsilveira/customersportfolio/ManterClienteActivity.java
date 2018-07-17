@@ -301,6 +301,7 @@ public class ManterClienteActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(message)) {
                 return;
             }
+            mEditTextCpf.requestFocus();
             DialogUtil.showWarningDialog(ManterClienteActivity.this, message);
         }
 
