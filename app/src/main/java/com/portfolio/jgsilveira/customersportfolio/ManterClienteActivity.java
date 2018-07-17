@@ -65,6 +65,7 @@ public class ManterClienteActivity extends AppCompatActivity {
         mViewModel.getProcessando().observe(this, new ProcessamentoObserver());
         mViewModel.getMensagem().observe(this, new MensagemObserver());
         mViewModel.getEditando().observe(this, new EdicaoObserver());
+        mViewModel.getMensagemErro().observe(this, new ErroObserver());
     }
 
     @Override
@@ -135,6 +136,18 @@ public class ManterClienteActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mostrarCalendario();
+            }
+        });
+        mEditTextCpf.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                String cpf = mEditTextCpf.getText().toString();
+                if (TextUtils.isEmpty(cpf)) {
+                    return;
+                }
+                if (!hasFocus) {
+                    mViewModel.validarCpf(cpf);
+                }
             }
         });
     }
@@ -277,6 +290,18 @@ public class ManterClienteActivity extends AppCompatActivity {
             supportInvalidateOptionsMenu();
             boolean isEditando = editing != null && editing;
             habilitarViews(isEditando);
+        }
+
+    }
+
+    private class ErroObserver implements Observer<String> {
+
+        @Override
+        public void onChanged(@Nullable String message) {
+            if (TextUtils.isEmpty(message)) {
+                return;
+            }
+            DialogUtil.showWarningDialog(ManterClienteActivity.this, message);
         }
 
     }

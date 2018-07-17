@@ -192,7 +192,12 @@ public class ClienteViewModel extends AppViewModel {
             String mensagem = getString(R.string.dados_invalidos_menor_de_idade);
             throw new MenorIdadeException(mensagem);
         }
+    }
 
+    public void validarCpf(String cpf) {
+        mTask = new AsyncDatabaseTransactionTask();
+        mTask.registerCallback(new ExistsDocumentQuery(cpf));
+        mTask.execute();
     }
 
     @Override
@@ -263,6 +268,38 @@ public class ClienteViewModel extends AppViewModel {
             mProcessando.setValue(false);
         }
 
+    }
+
+    private class ExistsDocumentQuery implements AsyncDatabaseTransactionTask.TransactionCallback {
+
+        private String mCpf;
+
+        ExistsDocumentQuery(String cpf) {
+            mCpf = cpf;
+        }
+
+        @Override
+        public void onPreTransaction() {
+            mProcessando.setValue(true);
+        }
+
+        @Override
+        public boolean onTransaction() {
+            return mDao.existsCpf(mCpf);
+        }
+
+        @Override
+        public void onPostTransaction(boolean exists, String message) {
+            mProcessando.setValue(false);
+            if (exists) {
+                mMensagemErro.setValue(getString(R.string.cpf_ja_existe));
+            }
+        }
+
+        @Override
+        public void onCancelTransaction() {
+            mProcessando.setValue(false);
+        }
     }
 
 }
