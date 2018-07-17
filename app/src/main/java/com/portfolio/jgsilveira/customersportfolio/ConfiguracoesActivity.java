@@ -45,7 +45,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
     @NonNull
     private ArrayAdapter<EnumEstados> newAdapter(List<EnumEstados> values) {
-        return new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+        return new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                 android.R.id.text1, values);
     }
 

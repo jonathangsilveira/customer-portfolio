@@ -33,7 +33,7 @@ public class ClienteDaoReport {
     @Test
     public void queryWithParameters() {
         ClienteDao dao = mDatabase.clienteDao();
-        String name = "Pedro";
+        String name = "ics";
 
         List<Cliente> clientes = dao.queryWithParameters(name, null, null, null);
 
@@ -57,7 +57,7 @@ public class ClienteDaoReport {
         clientes.add(cliente);
         cliente = new Cliente();
         cliente.setNome("Ericson");
-        cliente.setCpf("988.626.840-96");
+        cliente.setCpf("98862684096");
         cliente.setUf(EnumEstados.SANTA_CATARINA.getSigla());
         cliente.setTelefone("");
         cliente.setDataNascimento(DateUtil.createDate(1992, Calendar.DECEMBER, 8));
@@ -65,7 +65,7 @@ public class ClienteDaoReport {
         clientes.add(cliente);
         cliente = new Cliente();
         cliente.setNome("Snake Sanders");
-        cliente.setCpf("496.738.220-77");
+        cliente.setCpf("49673822077");
         cliente.setUf(EnumEstados.PARANA.getSigla());
         cliente.setTelefone("");
         cliente.setDataNascimento(DateUtil.createDate(1995, Calendar.DECEMBER, 8));

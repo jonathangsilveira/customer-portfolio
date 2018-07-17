@@ -4,4 +4,5 @@
     <string name="campo_obrigatorio_nao_informado">Campo obrigatório [%s] não informado!</string>
     <string name="dados_invalidos_menor_de_idade">Não é permitido cadastrar menores de idade</string>
     <string name="nenhum_resultado_encontrado">Nenhum resultado encontrado!</string>
+    <string name="cpf_ja_existe">CPF já existe!</string>
 </resources>
