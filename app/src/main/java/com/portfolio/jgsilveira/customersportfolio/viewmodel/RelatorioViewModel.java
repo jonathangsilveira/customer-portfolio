@@ -1,13 +1,14 @@
 package com.portfolio.jgsilveira.customersportfolio.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.portfolio.jgsilveira.customersportfolio.R;
 import com.portfolio.jgsilveira.customersportfolio.dao.ClienteDao;
-import com.portfolio.jgsilveira.customersportfolio.database.AsyncDatabaseTransactionTask;
 import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
 import com.portfolio.jgsilveira.customersportfolio.model.FiltroRelatorio;
 
@@ -21,8 +22,6 @@ public class RelatorioViewModel extends AppViewModel {
     private MutableLiveData<List<Cliente>> mResultado;
 
     private ClienteDao mDao;
-
-    private AsyncDatabaseTransactionTask mTask;
 
     public RelatorioViewModel(@NonNull Application application) {
         super(application);
@@ -59,48 +58,47 @@ public class RelatorioViewModel extends AppViewModel {
     }
 
     public void gerarRelatorio() {
-        mTask = new AsyncDatabaseTransactionTask();
-        mTask.registerCallback(new DatabaseQuery());
-        mTask.execute();
+        AsyncReportTask task = new AsyncReportTask();
+        mTask = task;
+        task.execute();
     }
 
-    private boolean hasAnyTaskRunning() {
-        return mTask != null && !mTask.isCancelled();
-    }
-
-    private class DatabaseQuery implements AsyncDatabaseTransactionTask.TransactionCallback {
-
-        private List<Cliente> mClientes;
+    @SuppressLint("StaticFieldLeak")
+    private class AsyncReportTask extends AsyncTask<Void, Void, List<Cliente>> {
 
         @Override
-        public void onPreTransaction() {
-            mProcessando.setValue(true);
-        }
-
-        @Override
-        public boolean onTransaction() {
+        protected List<Cliente> doInBackground(Void... voids) {
             FiltroRelatorio filtro = mFiltro.getValue();
+            List<Cliente> clientes = new ArrayList<>();
             if (filtro != null) {
-                mClientes = mDao.queryWithParameters(filtro.getNome(), filtro.getDataNascimento(),
-                        filtro.getDataInicio(), filtro.getDataFim());
-                return !mClientes.isEmpty();
+                clientes.addAll(mDao.queryWithParameters(filtro.getNome(),
+                        filtro.getDataNascimento(), filtro.getDataInicio(), filtro.getDataFim()));
             }
-            return false;
+            return clientes;
         }
 
         @Override
-        public void onPostTransaction(boolean success, String message) {
+        protected void onPreExecute() {
+            mProcessando.setValue(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(List<Cliente> clientes) {
             mProcessando.setValue(false);
-            if (success) {
-                mResultado.setValue(mClientes);
-            } else {
+            boolean withoutResult = clientes.isEmpty();
+            if (withoutResult) {
                 mMensagem.setValue(getString(R.string.nenhum_resultado_encontrado));
+            } else {
+                mResultado.setValue(clientes);
             }
+            super.onPostExecute(clientes);
         }
 
         @Override
-        public void onCancelTransaction() {
+        protected void onCancelled() {
             mProcessando.setValue(false);
+            super.onCancelled();
         }
 
     }

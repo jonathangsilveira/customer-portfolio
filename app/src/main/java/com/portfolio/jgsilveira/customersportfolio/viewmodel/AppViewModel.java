@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -15,13 +16,15 @@ public abstract class AppViewModel extends AndroidViewModel {
 
     private AppDatabaseFactory mDatabase;
 
-    protected MutableLiveData<String> mMensagemErro;
+    MutableLiveData<String> mMensagemErro;
 
-    protected MutableLiveData<String> mMensagem;
+    MutableLiveData<String> mMensagem;
 
-    protected MutableLiveData<Boolean> mProcessando = new MutableLiveData<>();
+    MutableLiveData<Boolean> mProcessando = new MutableLiveData<>();
 
-    public AppViewModel(@NonNull Application application) {
+    AsyncTask mTask;
+
+    AppViewModel(@NonNull Application application) {
         super(application);
         init();
     }
@@ -60,6 +63,10 @@ public abstract class AppViewModel extends AndroidViewModel {
             mMensagemErro.setValue(StringUtil.VAZIO);
         }
         return mMensagemErro;
+    }
+
+    boolean hasAnyTaskRunning() {
+        return mTask != null && !mTask.isCancelled();
     }
 
 }

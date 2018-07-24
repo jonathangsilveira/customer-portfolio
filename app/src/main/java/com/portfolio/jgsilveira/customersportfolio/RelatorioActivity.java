@@ -119,7 +119,6 @@ public class RelatorioActivity extends AppCompatActivity {
                 findViewById(R.id.activity_relatorio_calendario_cadastrado_em);
         mImageButtonCalendarioCadastradoAte =
                 findViewById(R.id.activity_relatorio_calendario_cadastrado_ate);
-        mRecyclerViewResultado = findViewById(R.id.activity_relatorio_resultados);
         mContainerProgressbar = findViewById(R.id.container_progressBar);
     }
 

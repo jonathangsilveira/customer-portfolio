@@ -1,29 +1,30 @@
 package com.portfolio.jgsilveira.customersportfolio.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.portfolio.jgsilveira.customersportfolio.R;
 import com.portfolio.jgsilveira.customersportfolio.dao.ClienteDao;
-import com.portfolio.jgsilveira.customersportfolio.database.AsyncDatabaseTransactionTask;
 import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
 import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
+import com.portfolio.jgsilveira.customersportfolio.util.StringUtil;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 public class ClienteViewModel extends AppViewModel {
 
     private ClienteDao mDao;
 
     private MutableLiveData<Cliente> mCliente;
-
-    private AsyncDatabaseTransactionTask mTask;
 
     private long mId;
 
@@ -77,9 +78,9 @@ public class ClienteViewModel extends AppViewModel {
     }
 
     private void buscarCliente() {
-        mTask = new AsyncDatabaseTransactionTask();
-        mTask.registerCallback(new DatabaseQuery());
-        mTask.execute();
+        AsyncQueryTesk task = new AsyncQueryTesk();
+        this.mTask = task;
+        task.execute(mId);
     }
 
     private boolean isNotAdulto(Date dataNascimento) {
@@ -94,28 +95,28 @@ public class ClienteViewModel extends AppViewModel {
         Objects.requireNonNull(cliente).setDataHoraCadastro(new Date());
         String uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
         Objects.requireNonNull(cliente).setUf(uf);
-        getDatabase().runInTransaction(new Runnable() {
+        mId = getDatabase().runInTransaction(new Callable<Long>() {
             @Override
-            public void run() {
-                mId = mDao.insert(cliente);
+            public Long call() throws Exception {
+                return mDao.insert(cliente);
             }
         });
     }
 
     private void atualizar(final Cliente cliente) {
-        getDatabase().runInTransaction(new Runnable() {
+        getDatabase().runInTransaction(new Callable<Integer>() {
             @Override
-            public void run() {
-                mDao.update(cliente);
+            public Integer call() throws Exception {
+                return mDao.update(cliente);
             }
         });
     }
 
     public void gravar(@NonNull Cliente cliente) {
         atualizarValores(cliente);
-        mTask = new AsyncDatabaseTransactionTask();
-        mTask.registerCallback(new DatabaseTransaction());
-        mTask.execute();
+        AsyncTransactionTask task = new AsyncTransactionTask();
+        mTask = task;
+        task.execute();
     }
 
     private void atualizarValores(@NonNull Cliente cliente) {
@@ -129,7 +130,7 @@ public class ClienteViewModel extends AppViewModel {
         }
     }
 
-    private void gravarAsincrono() {
+    private void gravarAssincrono() {
         Cliente cliente = mCliente.getValue();
         boolean inserir = Objects.requireNonNull(cliente).getId() == 0;
         if (inserir) {
@@ -168,10 +169,6 @@ public class ClienteViewModel extends AppViewModel {
         return EnumEstados.PARANA.getSigla().equals(uf);
     }
 
-    private boolean hasAnyTaskRunning() {
-        return mTask != null && !mTask.isCancelled();
-    }
-
     public void validarCampos(Cliente cliente)
             throws CampoObrigatorioNaoInformadoException, MenorIdadeException {
         if (TextUtils.isEmpty(cliente.getCpf())) {
@@ -195,9 +192,9 @@ public class ClienteViewModel extends AppViewModel {
     }
 
     public void validarCpf(String cpf) {
-        mTask = new AsyncDatabaseTransactionTask();
-        mTask.registerCallback(new ExistsDocumentQuery(cpf));
-        mTask.execute();
+        AsyncValidationTask task = new AsyncValidationTask();
+        this.mTask = task;
+        task.execute(cpf);
     }
 
     @Override
@@ -208,98 +205,111 @@ public class ClienteViewModel extends AppViewModel {
         super.onCleared();
     }
 
-    private class DatabaseTransaction implements AsyncDatabaseTransactionTask.TransactionCallback {
+    @SuppressLint("StaticFieldLeak")
+    private class AsyncQueryTesk extends AsyncTask<Long, Void, Cliente> {
+
+        private String mErrorMessage = StringUtil.VAZIO;
 
         @Override
-        public void onPreTransaction() {
+        protected Cliente doInBackground(Long... ids) {
+            Cliente cliente = null;
+            try {
+                cliente = mDao.queryById(ids[0]);
+            } catch (Exception e) {
+                mErrorMessage = e.getMessage();
+            }
+            return cliente;
+        }
+
+        @Override
+        protected void onPreExecute() {
             mProcessando.setValue(true);
         }
 
         @Override
-        public boolean onTransaction() {
-            gravarAsincrono();
-            return true;
-        }
-
-        @Override
-        public void onPostTransaction(boolean success, String message) {
+        protected void onPostExecute(Cliente cliente) {
             mProcessando.setValue(false);
-            mEditando.setValue(false);
-            if (success) {
-                mMensagem.setValue(getString(R.string.cadastro_gravado));
+            if (isSuccessful()) {
+                mCliente.setValue(cliente);
+            } else {
+                String message = getString(R.string.erro_ao_consultar_cliente, mErrorMessage);
+                mMensagemErro.setValue(message);
             }
+            super.onPostExecute(cliente);
         }
 
         @Override
-        public void onCancelTransaction() {
+        protected void onCancelled() {
             mProcessando.setValue(false);
-            mEditando.setValue(false);
+        }
+
+        private boolean isSuccessful() {
+            return TextUtils.isEmpty(mErrorMessage);
         }
 
     }
 
-    private class DatabaseQuery implements AsyncDatabaseTransactionTask.TransactionCallback {
-
-        private Cliente mResult;
+    @SuppressLint("StaticFieldLeak")
+    private class AsyncValidationTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        public void onPreTransaction() {
+        protected Boolean doInBackground(String... cpfs) {
+            return mDao.existsCpf(cpfs[0]);
+        }
+
+        @Override
+        protected void onPreExecute() {
             mProcessando.setValue(true);
+            super.onPreExecute();
         }
 
         @Override
-        public boolean onTransaction() {
-            mResult = mDao.queryById(mId);
-            return true;
-        }
-
-        @Override
-        public void onPostTransaction(boolean success, String message) {
-            mProcessando.setValue(false);
-            if (success) {
-                if (mResult != null) {
-                    mCliente.setValue(mResult);
-                }
-            }
-        }
-
-        @Override
-        public void onCancelTransaction() {
-            mProcessando.setValue(false);
-        }
-
-    }
-
-    private class ExistsDocumentQuery implements AsyncDatabaseTransactionTask.TransactionCallback {
-
-        private String mCpf;
-
-        ExistsDocumentQuery(String cpf) {
-            mCpf = cpf;
-        }
-
-        @Override
-        public void onPreTransaction() {
-            mProcessando.setValue(true);
-        }
-
-        @Override
-        public boolean onTransaction() {
-            return mDao.existsCpf(mCpf);
-        }
-
-        @Override
-        public void onPostTransaction(boolean exists, String message) {
+        protected void onPostExecute(Boolean exists) {
             mProcessando.setValue(false);
             if (exists) {
                 mMensagemErro.setValue(getString(R.string.cpf_ja_existe));
             }
+            super.onPostExecute(exists);
         }
 
         @Override
-        public void onCancelTransaction() {
+        protected void onCancelled(Boolean aBoolean) {
             mProcessando.setValue(false);
+            super.onCancelled(aBoolean);
         }
+
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class AsyncTransactionTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... args) {
+            gravarAssincrono();
+            return true;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mProcessando.setValue(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mProcessando.setValue(false);
+            mEditando.setValue(false);
+            mMensagem.setValue(getString(R.string.cadastro_gravado));
+            super.onPostExecute(success);
+        }
+
+        @Override
+        protected void onCancelled() {
+            mProcessando.setValue(false);
+            mEditando.setValue(false);
+            super.onCancelled();
+        }
+
     }
 
 }

@@ -116,40 +116,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".4"
-                    android:text="@string/nome" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".4"
-                    android:text="@string/cadastrado" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".2"
-                    android:text="@string/uf" />
-
-            </LinearLayout>
-
         </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_relatorio_resultados"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/activity_relatorio_filtros"
-            android:scrollbars="vertical" />
 
     </RelativeLayout>
 
