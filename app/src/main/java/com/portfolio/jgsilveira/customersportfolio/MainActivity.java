@@ -9,8 +9,6 @@ import android.widget.Button;
 
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
 
-import java.util.Objects;
-
 public class MainActivity extends AppCompatActivity {
 
     private Button mButtonCliente;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onRelatorioClicked() {
-        startActivity(RelatorioActivity.newIntent(this));
+        startActivity(ReportActivity.newIntent(this));
     }
 
     private void onConfiguracoesClicked() {

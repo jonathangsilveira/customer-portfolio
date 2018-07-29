@@ -20,7 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
+import com.portfolio.jgsilveira.customersportfolio.model.Customer;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DeviceUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.DialogUtil;
@@ -62,10 +62,10 @@ public class ManterClienteActivity extends AppCompatActivity {
         long idCliente = getIntent().getLongExtra(ID_CLIENTE, 0);
         mViewModel = ViewModelProviders.of(this).get(ClienteViewModel.class);
         mViewModel.getCliente(idCliente).observe(this, new ClienteObserver());
-        mViewModel.getProcessando().observe(this, new ProcessamentoObserver());
-        mViewModel.getMensagem().observe(this, new MensagemObserver());
+        mViewModel.getProcessing().observe(this, new ProcessamentoObserver());
+        mViewModel.getMessage().observe(this, new MensagemObserver());
         mViewModel.getEditando().observe(this, new EdicaoObserver());
-        mViewModel.getMensagemErro().observe(this, new ErroObserver());
+        mViewModel.getErrorMessage().observe(this, new ErroObserver());
     }
 
     @Override
@@ -180,7 +180,7 @@ public class ManterClienteActivity extends AppCompatActivity {
     private void gravar() {
         try {
             DeviceUtil.hideKeyboard(this);
-            Cliente cliente = getCliente();
+            Customer cliente = getCliente();
             mViewModel.validarCampos(cliente);
             mViewModel.gravar(cliente);
         } catch (BusinessException e) {
@@ -190,30 +190,30 @@ public class ManterClienteActivity extends AppCompatActivity {
         }
     }
 
-    private Cliente getCliente() throws ParseException {
-        Cliente cliente = new Cliente();
-        cliente.setNome(mEditTextNome.getText().toString());
-        cliente.setCpf(mEditTextCpf.getText().toString());
+    private Customer getCliente() throws ParseException {
+        Customer cliente = new Customer();
+        cliente.setName(mEditTextNome.getText().toString());
+        cliente.setDocument(mEditTextCpf.getText().toString());
         if (mEditTextNascimento.getText().length() > 0) {
-            cliente.setDataNascimento(
-                    DateUtil.converterParaData(mEditTextNascimento.getText().toString()));
+            cliente.setBirthdate(
+                    DateUtil.parseToDate(mEditTextNascimento.getText().toString()));
         }
-        cliente.setRg(mEditTextRg.getText().toString());
-        cliente.setTelefone(mEditTextTelefone.getText().toString());
+        cliente.setDocumentoId(mEditTextRg.getText().toString());
+        cliente.setTelephone(mEditTextTelefone.getText().toString());
         return cliente;
     }
 
-    private void exibirCliente(@Nullable Cliente cliente) {
+    private void exibirCliente(@Nullable Customer cliente) {
         if (cliente != null) {
-            mEditTextNome.setText(cliente.getNome());
-            mEditTextCpf.setText(cliente.getCpf());
-            if (cliente.getDataNascimento() == null) {
+            mEditTextNome.setText(cliente.getName());
+            mEditTextCpf.setText(cliente.getDocument());
+            if (cliente.getBirthdate() == null) {
                 mEditTextNascimento.getText().clear();
             } else {
-                mEditTextNascimento.setText(DateUtil.formatarData(cliente.getDataNascimento()));
+                mEditTextNascimento.setText(DateUtil.formatDateMedium(cliente.getBirthdate()));
             }
-            mEditTextRg.setText(cliente.getRg());
-            mEditTextTelefone.setText(cliente.getTelefone());
+            mEditTextRg.setText(cliente.getDocumentoId());
+            mEditTextTelefone.setText(cliente.getTelephone());
         }
     }
 
@@ -235,7 +235,7 @@ public class ManterClienteActivity extends AppCompatActivity {
                 newDate.set(Calendar.YEAR, year);
                 newDate.set(Calendar.MONTH, month);
                 newDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                mEditTextNascimento.setText(DateUtil.formatarData(newDate.getTime()));
+                mEditTextNascimento.setText(DateUtil.formatDateMedium(newDate.getTime()));
             }
         }, ano, mes, dia);
         dialog.show();
@@ -259,10 +259,10 @@ public class ManterClienteActivity extends AppCompatActivity {
 
     }
 
-    private class ClienteObserver implements Observer<Cliente> {
+    private class ClienteObserver implements Observer<Customer> {
 
         @Override
-        public void onChanged(@Nullable Cliente cliente) {
+        public void onChanged(@Nullable Customer cliente) {
             exibirCliente(cliente);
         }
 

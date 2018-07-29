@@ -1,5 +1,7 @@
 package com.portfolio.jgsilveira.customersportfolio.util;
 
+import android.annotation.SuppressLint;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,43 +11,45 @@ import java.util.Locale;
 
 public class DateUtil {
 
-    public static Locale DEFAULT_LOCALE = new Locale("pt","BR");
+    @SuppressLint("SimpleDateFormat")
+    private static SimpleDateFormat mDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    @SuppressLint("SimpleDateFormat")
+    private static SimpleDateFormat mDateTimeFormat =
+            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     private DateUtil() {
 
     }
 
-    public static int calcularIdade(Date dataNascimento, Date dataAtual) {
-        Calendar agora = Calendar.getInstance();
-        Calendar nascimento = Calendar.getInstance();
-        agora.setTime(dataAtual);
-        nascimento.setTime(dataNascimento);
-        int anoAtual = agora.get(Calendar.YEAR);
-        int anoNascimento = nascimento.get(Calendar.YEAR);
-        int idade = anoAtual - anoNascimento;
-        int mesAtual = agora.get(Calendar.MONTH);
-        int mesNascimento = nascimento.get(Calendar.MONTH);
-        if (mesNascimento > mesAtual) {
-            idade--;
-        } else if (mesAtual == mesNascimento) {
-            int diaAtual = agora.get(Calendar.DAY_OF_MONTH);
-            int diaNascimento = nascimento.get(Calendar.DAY_OF_MONTH);
-            if (diaNascimento > diaAtual) {
-                idade--;
+    public static int calculateAge(Date dataNascimento, Date dataAtual) {
+        Calendar now = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+        now.setTime(dataAtual);
+        birthDate.setTime(dataNascimento);
+        int currentYear = now.get(Calendar.YEAR);
+        int birthYear = birthDate.get(Calendar.YEAR);
+        int age = currentYear - birthYear;
+        int currentMonth = now.get(Calendar.MONTH);
+        int birthMonth = birthDate.get(Calendar.MONTH);
+        if (birthMonth > currentMonth) {
+            age--;
+        } else if (currentMonth == birthMonth) {
+            int currentDay = now.get(Calendar.DAY_OF_MONTH);
+            int birthday = birthDate.get(Calendar.DAY_OF_MONTH);
+            if (birthday > currentDay) {
+                age--;
             }
         }
-        return idade;
+        return age;
     }
 
-    public static String formatarData(Date data) {
-        return DateFormat.getDateInstance(DateFormat.MEDIUM, DEFAULT_LOCALE).format(data);
+    public static String formatDateMedium(Date data) {
+        return mDateFormat.format(data);
     }
 
-    public static Date converterParaData(String valor) throws ParseException {
-        DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.MEDIUM, DEFAULT_LOCALE);
-        return dateInstance.parse(valor);
+    public static Date parseToDate(String valor) throws ParseException {
+        return mDateFormat.parse(valor);
     }
 
     public static Date truncateDate(Date date) {
@@ -68,6 +72,10 @@ public class DateUtil {
 
     public static Date createDate(int year, int month, int dayOfMonth) {
         return createDate(year, month, dayOfMonth, 0, 0, 0);
+    }
+
+    public static String formatDateTimeMedium(Date date) {
+        return mDateTimeFormat.format(date);
     }
 
 }

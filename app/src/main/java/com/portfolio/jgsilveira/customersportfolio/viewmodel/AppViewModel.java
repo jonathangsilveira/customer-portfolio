@@ -16,11 +16,11 @@ public abstract class AppViewModel extends AndroidViewModel {
 
     private AppDatabaseFactory mDatabase;
 
-    MutableLiveData<String> mMensagemErro;
+    MutableLiveData<String> mErrorMessage;
 
-    MutableLiveData<String> mMensagem;
+    MutableLiveData<String> mMessage;
 
-    MutableLiveData<Boolean> mProcessando = new MutableLiveData<>();
+    MutableLiveData<Boolean> mProcessing = new MutableLiveData<>();
 
     AsyncTask mTask;
 
@@ -45,24 +45,24 @@ public abstract class AppViewModel extends AndroidViewModel {
         return getApplication().getString(resId, args);
     }
 
-    public LiveData<Boolean> getProcessando() {
-        return mProcessando;
+    public LiveData<Boolean> getProcessing() {
+        return mProcessing;
     }
 
-    public LiveData<String> getMensagem() {
-        if (mMensagem == null) {
-            mMensagem = new MutableLiveData<>();
-            mMensagem.setValue(StringUtil.VAZIO);
+    public LiveData<String> getMessage() {
+        if (mMessage == null) {
+            mMessage = new MutableLiveData<>();
+            mMessage.setValue(StringUtil.VAZIO);
         }
-        return mMensagem;
+        return mMessage;
     }
 
-    public LiveData<String> getMensagemErro() {
-        if (mMensagemErro == null) {
-            mMensagemErro = new MutableLiveData<>();
-            mMensagemErro.setValue(StringUtil.VAZIO);
+    public LiveData<String> getErrorMessage() {
+        if (mErrorMessage == null) {
+            mErrorMessage = new MutableLiveData<>();
+            mErrorMessage.setValue(StringUtil.VAZIO);
         }
-        return mMensagemErro;
+        return mErrorMessage;
     }
 
     boolean hasAnyTaskRunning() {

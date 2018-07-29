@@ -9,10 +9,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.portfolio.jgsilveira.customersportfolio.R;
-import com.portfolio.jgsilveira.customersportfolio.dao.ClienteDao;
-import com.portfolio.jgsilveira.customersportfolio.model.Cliente;
+import com.portfolio.jgsilveira.customersportfolio.dao.CustomerDao;
+import com.portfolio.jgsilveira.customersportfolio.model.Customer;
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
-import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
+import com.portfolio.jgsilveira.customersportfolio.settings.EnumStates;
 import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 import com.portfolio.jgsilveira.customersportfolio.util.StringUtil;
 
@@ -22,9 +22,9 @@ import java.util.concurrent.Callable;
 
 public class ClienteViewModel extends AppViewModel {
 
-    private ClienteDao mDao;
+    private CustomerDao mDao;
 
-    private MutableLiveData<Cliente> mCliente;
+    private MutableLiveData<Customer> mCliente;
 
     private long mId;
 
@@ -39,7 +39,7 @@ public class ClienteViewModel extends AppViewModel {
         mDao = getDatabase().clienteDao();
     }
 
-    public LiveData<Cliente> getCliente(long id) {
+    public LiveData<Customer> getCliente(long id) {
         if (mCliente == null) {
             mCliente = new MutableLiveData<>();
             if (id > 0) {
@@ -53,7 +53,7 @@ public class ClienteViewModel extends AppViewModel {
 
     public void novoCliente() {
         mEditando.setValue(true);
-        mCliente.postValue(new Cliente());
+        mCliente.postValue(new Customer());
         mId = 0;
     }
 
@@ -67,7 +67,7 @@ public class ClienteViewModel extends AppViewModel {
 
     public void cancelarAlteracoes() {
         mEditando.setValue(false);
-        Cliente cliente = mCliente.getValue();
+        Customer cliente = mCliente.getValue();
         mCliente.setValue(cliente);
     }
 
@@ -87,14 +87,14 @@ public class ClienteViewModel extends AppViewModel {
         if (dataNascimento == null) {
             return true;
         }
-        int idade = DateUtil.calcularIdade(dataNascimento, new Date());
+        int idade = DateUtil.calculateAge(dataNascimento, new Date());
         return idade < 18;
     }
 
-    private void inserir(final Cliente cliente) {
-        Objects.requireNonNull(cliente).setDataHoraCadastro(new Date());
-        String uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
-        Objects.requireNonNull(cliente).setUf(uf);
+    private void inserir(final Customer cliente) {
+        Objects.requireNonNull(cliente).setRegisterDate(new Date());
+        String uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
+        Objects.requireNonNull(cliente).setState(uf);
         mId = getDatabase().runInTransaction(new Callable<Long>() {
             @Override
             public Long call() throws Exception {
@@ -103,7 +103,7 @@ public class ClienteViewModel extends AppViewModel {
         });
     }
 
-    private void atualizar(final Cliente cliente) {
+    private void atualizar(final Customer cliente) {
         getDatabase().runInTransaction(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -112,26 +112,26 @@ public class ClienteViewModel extends AppViewModel {
         });
     }
 
-    public void gravar(@NonNull Cliente cliente) {
+    public void gravar(@NonNull Customer cliente) {
         atualizarValores(cliente);
         AsyncTransactionTask task = new AsyncTransactionTask();
         mTask = task;
         task.execute();
     }
 
-    private void atualizarValores(@NonNull Cliente cliente) {
-        Cliente valor = mCliente.getValue();
+    private void atualizarValores(@NonNull Customer cliente) {
+        Customer valor = mCliente.getValue();
         if (valor != null) {
-            valor.setNome(cliente.getNome());
-            valor.setCpf(cliente.getCpf());
-            valor.setDataNascimento(cliente.getDataNascimento());
-            valor.setRg(cliente.getRg());
-            valor.setTelefone(cliente.getTelefone());
+            valor.setName(cliente.getName());
+            valor.setDocument(cliente.getDocument());
+            valor.setBirthdate(cliente.getBirthdate());
+            valor.setDocumentoId(cliente.getDocumentoId());
+            valor.setTelephone(cliente.getTelephone());
         }
     }
 
     private void gravarAssincrono() {
-        Cliente cliente = mCliente.getValue();
+        Customer cliente = mCliente.getValue();
         boolean inserir = Objects.requireNonNull(cliente).getId() == 0;
         if (inserir) {
             inserir(cliente);
@@ -141,51 +141,51 @@ public class ClienteViewModel extends AppViewModel {
     }
 
     private boolean isCatarinense() {
-        Cliente cliente = mCliente.getValue();
+        Customer cliente = mCliente.getValue();
         if (cliente == null) {
             return false;
         }
         String uf;
-        if (TextUtils.isEmpty(cliente.getUf())) {
-            uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
+        if (TextUtils.isEmpty(cliente.getState())) {
+            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
         } else {
-            uf = cliente.getUf();
+            uf = cliente.getState();
         }
-        return EnumEstados.SANTA_CATARINA.getSigla().equals(uf);
+        return EnumStates.SANTA_CATARINA.getSigla().equals(uf);
     }
 
     private boolean isParanaense() {
-        Cliente cliente = mCliente.getValue();
+        Customer cliente = mCliente.getValue();
         if (cliente == null) {
             return false;
         }
         String uf;
         boolean inserindo = cliente.getId() == 0;
         if (inserindo) {
-            uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
+            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
         } else {
-            uf = cliente.getUf();
+            uf = cliente.getState();
         }
-        return EnumEstados.PARANA.getSigla().equals(uf);
+        return EnumStates.PARANA.getSigla().equals(uf);
     }
 
-    public void validarCampos(Cliente cliente)
+    public void validarCampos(Customer customer)
             throws CampoObrigatorioNaoInformadoException, MenorIdadeException {
-        if (TextUtils.isEmpty(cliente.getCpf())) {
+        if (TextUtils.isEmpty(customer.getDocument())) {
             String cpf = getString(R.string.label_cpf);
             String mensagem = getString(R.string.campo_obrigatorio_nao_informado, cpf);
             throw new CampoObrigatorioNaoInformadoException(mensagem);
         }
-        if (cliente.getDataNascimento() == null) {
+        if (customer.getBirthdate() == null) {
             String dataNascimento = getString(R.string.label_data_nascimento);
             String mensagem = getString(R.string.campo_obrigatorio_nao_informado, dataNascimento);
             throw new CampoObrigatorioNaoInformadoException(mensagem);
         }
-        if (isCatarinense() && TextUtils.isEmpty(cliente.getRg())) {
+        if (isCatarinense() && TextUtils.isEmpty(customer.getDocumentoId())) {
             String rg = getString(R.string.label_rg);
             String mensagem = getString(R.string.campo_obrigatorio_nao_informado, rg);
             throw new CampoObrigatorioNaoInformadoException(mensagem);
-        } else if (isParanaense() && isNotAdulto(cliente.getDataNascimento())) {
+        } else if (isParanaense() && isNotAdulto(customer.getBirthdate())) {
             String mensagem = getString(R.string.dados_invalidos_menor_de_idade);
             throw new MenorIdadeException(mensagem);
         }
@@ -206,13 +206,13 @@ public class ClienteViewModel extends AppViewModel {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class AsyncQueryTesk extends AsyncTask<Long, Void, Cliente> {
+    private class AsyncQueryTesk extends AsyncTask<Long, Void, Customer> {
 
         private String mErrorMessage = StringUtil.VAZIO;
 
         @Override
-        protected Cliente doInBackground(Long... ids) {
-            Cliente cliente = null;
+        protected Customer doInBackground(Long... ids) {
+            Customer cliente = null;
             try {
                 cliente = mDao.queryById(ids[0]);
             } catch (Exception e) {
@@ -223,24 +223,24 @@ public class ClienteViewModel extends AppViewModel {
 
         @Override
         protected void onPreExecute() {
-            mProcessando.setValue(true);
+            mProcessing.setValue(true);
         }
 
         @Override
-        protected void onPostExecute(Cliente cliente) {
-            mProcessando.setValue(false);
+        protected void onPostExecute(Customer cliente) {
+            mProcessing.setValue(false);
             if (isSuccessful()) {
                 mCliente.setValue(cliente);
             } else {
                 String message = getString(R.string.erro_ao_consultar_cliente, mErrorMessage);
-                mMensagemErro.setValue(message);
+                ClienteViewModel.this.mErrorMessage.setValue(message);
             }
             super.onPostExecute(cliente);
         }
 
         @Override
         protected void onCancelled() {
-            mProcessando.setValue(false);
+            mProcessing.setValue(false);
         }
 
         private boolean isSuccessful() {
@@ -254,27 +254,27 @@ public class ClienteViewModel extends AppViewModel {
 
         @Override
         protected Boolean doInBackground(String... cpfs) {
-            return mDao.existsCpf(cpfs[0]);
+            return mDao.existsCpf(mId, cpfs[0]);
         }
 
         @Override
         protected void onPreExecute() {
-            mProcessando.setValue(true);
+            mProcessing.setValue(true);
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Boolean exists) {
-            mProcessando.setValue(false);
+            mProcessing.setValue(false);
             if (exists) {
-                mMensagemErro.setValue(getString(R.string.cpf_ja_existe));
+                mErrorMessage.setValue(getString(R.string.cpf_ja_existe));
             }
             super.onPostExecute(exists);
         }
 
         @Override
         protected void onCancelled(Boolean aBoolean) {
-            mProcessando.setValue(false);
+            mProcessing.setValue(false);
             super.onCancelled(aBoolean);
         }
 
@@ -291,21 +291,21 @@ public class ClienteViewModel extends AppViewModel {
 
         @Override
         protected void onPreExecute() {
-            mProcessando.setValue(true);
+            mProcessing.setValue(true);
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
-            mProcessando.setValue(false);
+            mProcessing.setValue(false);
             mEditando.setValue(false);
-            mMensagem.setValue(getString(R.string.cadastro_gravado));
+            mMessage.setValue(getString(R.string.cadastro_gravado));
             super.onPostExecute(success);
         }
 
         @Override
         protected void onCancelled() {
-            mProcessando.setValue(false);
+            mProcessing.setValue(false);
             mEditando.setValue(false);
             super.onCancelled();
         }

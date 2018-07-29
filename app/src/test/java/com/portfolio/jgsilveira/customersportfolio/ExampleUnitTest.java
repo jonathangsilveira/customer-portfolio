@@ -4,7 +4,6 @@ import com.portfolio.jgsilveira.customersportfolio.util.DateUtil;
 
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -23,8 +22,8 @@ public class ExampleUnitTest {
 
     @Test
     public void show() throws ParseException {
-        Date data = DateUtil.converterParaData("15/01/1990");
-        System.out.println(DateUtil.formatarData(data));
+        Date data = DateUtil.parseToDate("15/01/1990");
+        System.out.println(DateUtil.formatDateMedium(data));
     }
 
 }

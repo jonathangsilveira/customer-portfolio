@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReportResultFragment">
+
+    <HorizontalScrollView
+        android:id="@+id/fragment_report_result_horizontal_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_resultado_fechar"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_resultado_fechar">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/fragment_resultado_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="@string/name"/>
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/state"
+                    android:lines="1" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/document"
+                    android:lines="1"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/documentoId"
+                    android:lines="1"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/nascimento"
+                    android:lines="1"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/telephone"
+                    android:lines="1"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/cadastrado"
+                    android:lines="1" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_resultado_lista"
+                android:layout_below="@+id/fragment_resultado_header"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:stretchMode="columnWidth" />
+
+        </RelativeLayout>
+
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/fragment_resultado_fechar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/fechar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.8" />
+
+</android.support.constraint.ConstraintLayout>

@@ -15,8 +15,8 @@
     <string name="relatorio">Relatório</string>
     <string name="configuracoes">Configurações</string>
     <string name="cadastrado">Cadastrado</string>
-    <string name="nome">Nome</string>
-    <string name="uf">UF</string>
+    <string name="name">Nome</string>
+    <string name="state">UF</string>
     <string name="label_cadastrado_em">Cadastrado em:</string>
     <string name="label_ate">Até</string>
     <string name="gerar">Gerar</string>
@@ -29,5 +29,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="placeholder">---</string>
     <string name="fechar">Fechar</string>
+    <string name="document">CPF</string>
+    <string name="documentoId">RG</string>
+    <string name="nascimento">Nascimento</string>
+    <string name="telephone">Telefone</string>
+    <string name="label_nascido_de">Nascido de:</string>
+    <string name="label_nascido_ate">Nascido até:</string>
+    <string name="label_cadastrado_ate">Cadastrado até:</string>
+    <string name="label_documento_cpf_rg">Documento (CPF, RG):</string>
+    <string name="visualizar">Visualizar</string>
 </resources>

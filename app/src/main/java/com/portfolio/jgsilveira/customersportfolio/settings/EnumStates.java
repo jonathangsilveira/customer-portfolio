@@ -1,10 +1,14 @@
 package com.portfolio.jgsilveira.customersportfolio.settings;
 
-public enum EnumEstados {
+import com.portfolio.jgsilveira.customersportfolio.util.StringUtil;
 
-    SANTA_CATARINA("SC", "Santa Catarina"), PARANA("PR", "Paraná");
+public enum EnumStates {
 
-    EnumEstados(String sigla, String descricao) {
+    EMPTY(StringUtil.VAZIO, StringUtil.VAZIO),
+    SANTA_CATARINA("SC", "Santa Catarina"),
+    PARANA("PR", "Paraná");
+
+    EnumStates(String sigla, String descricao) {
         mSigla = sigla;
         mDescricao = descricao;
     }
@@ -25,4 +29,5 @@ public enum EnumEstados {
     public String toString() {
         return mDescricao;
     }
+
 }

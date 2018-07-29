@@ -6,14 +6,14 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
-import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
+import com.portfolio.jgsilveira.customersportfolio.settings.EnumStates;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class ConfiguracoesViewModel extends AppViewModel {
 
-    private MutableLiveData<List<EnumEstados>> mEstados = new MutableLiveData<>();
+    private MutableLiveData<List<EnumStates>> mEstados = new MutableLiveData<>();
 
     private MutableLiveData<Integer> mPosicaoEstado = new MutableLiveData<>();
 
@@ -23,18 +23,18 @@ public class ConfiguracoesViewModel extends AppViewModel {
     }
 
     private void init() {
-        String uf = AppSettings.getState(EnumEstados.SANTA_CATARINA.getSigla());
-        EnumEstados[] estados = EnumEstados.values();
+        String uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
+        EnumStates[] estados = EnumStates.values();
         mEstados.setValue(Arrays.asList(estados));
         for (int i = 0; i < estados.length; i++) {
-            EnumEstados estado = estados[i];
+            EnumStates estado = estados[i];
             if (estado.getSigla().equals(uf)) {
                 mPosicaoEstado.setValue(i);
             }
         }
     }
 
-    public LiveData<List<EnumEstados>> getEstados() {
+    public LiveData<List<EnumStates>> getEstados() {
         return mEstados;
     }
 

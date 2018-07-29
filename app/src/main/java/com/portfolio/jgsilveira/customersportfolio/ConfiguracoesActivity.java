@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.portfolio.jgsilveira.customersportfolio.settings.AppSettings;
-import com.portfolio.jgsilveira.customersportfolio.settings.EnumEstados;
+import com.portfolio.jgsilveira.customersportfolio.settings.EnumStates;
 import com.portfolio.jgsilveira.customersportfolio.viewmodel.ConfiguracoesViewModel;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private ArrayAdapter<EnumEstados> newAdapter(List<EnumEstados> values) {
+    private ArrayAdapter<EnumStates> newAdapter(List<EnumStates> values) {
         return new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                 android.R.id.text1, values);
     }
@@ -56,10 +56,10 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
     }
 
-    private class EstadoObserver implements Observer<List<EnumEstados>>{
+    private class EstadoObserver implements Observer<List<EnumStates>>{
 
         @Override
-        public void onChanged(@Nullable List<EnumEstados> estados) {
+        public void onChanged(@Nullable List<EnumStates> estados) {
             if (estados != null) {
                 mSpinnerEstado.setAdapter(newAdapter(estados));
             }
@@ -82,9 +82,9 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-            List<EnumEstados> estados = mViewModel.getEstados().getValue();
+            List<EnumStates> estados = mViewModel.getEstados().getValue();
             if (estados != null) {
-                EnumEstados selecionado = estados.get(position);
+                EnumStates selecionado = estados.get(position);
                 AppSettings.putState(selecionado.getSigla());
             }
         }
