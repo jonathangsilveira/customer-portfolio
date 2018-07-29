@@ -33,16 +33,18 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".RelatorioActivity"
+            android:name=".ReportActivity"
             android:label="@string/relatorio"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".ConfiguracoesActivity"
+        <activity
+            android:name=".ConfiguracoesActivity"
             android:label="@string/configuracoes"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".SearchCustomerActivity"></activity>
     </application>
 
 </manifest>
