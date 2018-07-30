@@ -49,7 +49,7 @@ public class ClienteDaoReport {
         Customer cliente = new Customer();
         cliente.setName("Pedro");
         cliente.setDocument("23136701046");
-        cliente.setState(EnumStates.SANTA_CATARINA.getSigla());
+        cliente.setState(EnumStates.SANTA_CATARINA.getLowValue());
         cliente.setTelephone("");
         cliente.setBirthdate(DateUtil.createDate(1990, Calendar.JANUARY, 15));
         cliente.setRegisterDate(DateUtil.createDate(2008, Calendar.FEBRUARY, 19, 15, 52, 0));
@@ -57,7 +57,7 @@ public class ClienteDaoReport {
         cliente = new Customer();
         cliente.setName("Ericson");
         cliente.setDocument("98862684096");
-        cliente.setState(EnumStates.SANTA_CATARINA.getSigla());
+        cliente.setState(EnumStates.SANTA_CATARINA.getLowValue());
         cliente.setTelephone("");
         cliente.setBirthdate(DateUtil.createDate(1992, Calendar.DECEMBER, 8));
         cliente.setRegisterDate(DateUtil.createDate(2011, Calendar.JULY, 23, 9, 13, 0));
@@ -65,7 +65,7 @@ public class ClienteDaoReport {
         cliente = new Customer();
         cliente.setName("Snake Sanders");
         cliente.setDocument("49673822077");
-        cliente.setState(EnumStates.PARANA.getSigla());
+        cliente.setState(EnumStates.PARANA.getLowValue());
         cliente.setTelephone("");
         cliente.setBirthdate(DateUtil.createDate(1995, Calendar.DECEMBER, 8));
         cliente.setRegisterDate(DateUtil.createDate(2016, Calendar.MARCH, 23, 10, 33, 0));

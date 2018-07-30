@@ -2,7 +2,6 @@ package com.portfolio.jgsilveira.customersportfolio;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -32,8 +31,6 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class ReportResultFragment extends Fragment {
-
-    public static final String TAG = "ReportResultFragment";
 
     private RecyclerView mRecyclerViewResult;
 
@@ -84,11 +81,6 @@ public class ReportResultFragment extends Fragment {
         mButtonClose.setOnClickListener(new OnClosePressedListener());
     }
 
-    private void showRegister(long id) {
-        Intent intent = ManterClienteActivity.newIntent(getActivity(), id);
-        startActivity(intent);
-    }
-
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -130,7 +122,6 @@ public class ReportResultFragment extends Fragment {
             String placeholder = getString(R.string.placeholder);
             String dateMask = getString(R.string.mascara_data);
             Customer cliente = mClientes.get(position);
-            viewHolder.setData(getItemId(position));
             viewHolder.mTextViewName.setText(cliente.getName());
             viewHolder.mTextViewRegisteredAt
                     .setText(DateUtil.formatDateTimeMedium(cliente.getRegisterDate()));
@@ -173,8 +164,6 @@ public class ReportResultFragment extends Fragment {
 
             private TextView mTextViewState;
 
-            private long mId;
-
             ReportViewHolder(@NonNull View itemView) {
                 super(itemView);
                 init(itemView);
@@ -189,10 +178,6 @@ public class ReportResultFragment extends Fragment {
                 mTextViewBirthdate = itemView.findViewById(R.id.item_report_birthdate);
                 mTextViewTelephone = itemView.findViewById(R.id.item_report_telephone);
                 itemView.setOnClickListener(this);
-            }
-
-            private void setData(long id) {
-                mId = id;
             }
 
             @Override

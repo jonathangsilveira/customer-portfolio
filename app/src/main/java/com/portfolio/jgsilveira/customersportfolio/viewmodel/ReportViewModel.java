@@ -2,6 +2,7 @@ package com.portfolio.jgsilveira.customersportfolio.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -29,6 +30,8 @@ public class ReportViewModel extends AppViewModel {
     private List<EnumStates> mStates = new ArrayList<>();
 
     private int mStatesPosition = 0;
+
+    private MutableLiveData<ReportFilters> mLiveDataFilters;
 
     public ReportViewModel(@NonNull Application application) {
         super(application);
@@ -80,7 +83,7 @@ public class ReportViewModel extends AppViewModel {
     public void selectState(int position) {
         mStatesPosition = position;
         EnumStates state = mStates.get(position);
-        mFilters.setState(state.getSigla());
+        mFilters.setState(state.getLowValue());
     }
 
     public int getStateSelectedPosition() {
@@ -89,6 +92,27 @@ public class ReportViewModel extends AppViewModel {
 
     public List<EnumStates> getStates() {
         return mStates;
+    }
+
+    public void clearFilters() {
+        ReportFilters filters = getFilters();
+        filters.setName(null);
+        filters.setState(null);
+        filters.setDocument(null);
+        filters.setBornedFrom(null);
+        filters.setBornedTo(null);
+        filters.setStartDate(null);
+        filters.setEndDate(null);
+        selectState(0);
+        mLiveDataFilters.setValue(filters);
+    }
+
+    public LiveData<ReportFilters> getLiveDataFilters() {
+        if (mLiveDataFilters == null) {
+            mLiveDataFilters = new MutableLiveData<>();
+            mLiveDataFilters.setValue(mFilters);
+        }
+        return mLiveDataFilters;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -118,6 +142,7 @@ public class ReportViewModel extends AppViewModel {
                 mHasResultado.setValue(true);
                 mResults.clear();
                 mResults.addAll(clientes);
+                mMessage.setValue(getString(R.string.relatorio_gerado_visualizar));
             }
             super.onPostExecute(clientes);
         }

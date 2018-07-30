@@ -56,11 +56,11 @@ public final class DialogUtil {
                                             DialogInterface.OnClickListener onClearDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        int ano = calendar.get(Calendar.YEAR);
-        int mes = calendar.get(Calendar.MONTH);
-        int diaMes = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog datePickerDialog =
-                new DatePickerDialog(context, onDateSet, ano, mes, diaMes);
+                new DatePickerDialog(context, onDateSet, year, month, dayOfMonth);
         String label = context.getString(R.string.limpar);
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, label, onClearDate);
         datePickerDialog.show();

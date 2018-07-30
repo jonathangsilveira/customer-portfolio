@@ -93,7 +93,7 @@ public class ClienteViewModel extends AppViewModel {
 
     private void inserir(final Customer cliente) {
         Objects.requireNonNull(cliente).setRegisterDate(new Date());
-        String uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
+        String uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getLowValue());
         Objects.requireNonNull(cliente).setState(uf);
         mId = getDatabase().runInTransaction(new Callable<Long>() {
             @Override
@@ -147,11 +147,11 @@ public class ClienteViewModel extends AppViewModel {
         }
         String uf;
         if (TextUtils.isEmpty(cliente.getState())) {
-            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
+            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getLowValue());
         } else {
             uf = cliente.getState();
         }
-        return EnumStates.SANTA_CATARINA.getSigla().equals(uf);
+        return EnumStates.SANTA_CATARINA.getLowValue().equals(uf);
     }
 
     private boolean isParanaense() {
@@ -162,11 +162,11 @@ public class ClienteViewModel extends AppViewModel {
         String uf;
         boolean inserindo = cliente.getId() == 0;
         if (inserindo) {
-            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getSigla());
+            uf = AppSettings.getState(EnumStates.SANTA_CATARINA.getLowValue());
         } else {
             uf = cliente.getState();
         }
-        return EnumStates.PARANA.getSigla().equals(uf);
+        return EnumStates.PARANA.getLowValue().equals(uf);
     }
 
     public void validarCampos(Customer customer)

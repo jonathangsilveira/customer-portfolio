@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_constraintWidth_default="percent"
-    tools:context=".FiltersFragment">
+    tools:context=".ReportFiltersFragment">
 
     <TextView
         android:id="@+id/fragment_filters_label_name"

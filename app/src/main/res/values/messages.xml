@@ -6,4 +6,5 @@
     <string name="nenhum_resultado_encontrado">Nenhum resultado encontrado!</string>
     <string name="cpf_ja_existe">CPF já existe!</string>
     <string name="erro_ao_consultar_cliente">Erro ao consultar cliente!\nCausa: %s</string>
+    <string name="relatorio_gerado_visualizar">Relatório gerado com sucesso! Click em Visualizar para ver o resultado.</string>
 </resources>

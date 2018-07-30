@@ -3,8 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_gerar"
+    <item android:id="@+id/action_generate"
         android:title="@string/gerar"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_clear"
+        android:title="@string/limpar"
+        app:showAsAction="ifRoom"/>
 
 </menu>

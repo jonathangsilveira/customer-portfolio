@@ -4,7 +4,7 @@ import com.portfolio.jgsilveira.customersportfolio.util.StringUtil;
 
 public enum EnumStates {
 
-    EMPTY(StringUtil.VAZIO, StringUtil.VAZIO),
+    EMPTY(null, StringUtil.VAZIO),
     SANTA_CATARINA("SC", "Santa Catarina"),
     PARANA("PR", "Paraná");
 
@@ -17,7 +17,7 @@ public enum EnumStates {
 
     private String mDescricao;
 
-    public String getSigla() {
+    public String getLowValue() {
         return mSigla;
     }
 

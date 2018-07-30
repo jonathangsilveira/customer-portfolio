@@ -30,7 +30,7 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_relatorio);
+        setContentView(R.layout.activity_report);
         initToolbar();
         initReferences();
         mViewModel = ViewModelProviders.of(this).get(ReportViewModel.class);
@@ -40,15 +40,17 @@ public class ReportActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.relatorio_menu, menu);
+        getMenuInflater().inflate(R.menu.report_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_gerar) {
-            DeviceUtil.hideKeyboard(this);
+        DeviceUtil.hideKeyboard(this);
+        if (item.getItemId() == R.id.action_generate) {
             mViewModel.generateReport();
+        } else if (item.getItemId() == R.id.action_clear) {
+            mViewModel.clearFilters();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -82,7 +84,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void showFilters() {
-        FiltersFragment fragment = FiltersFragment.newInstance();
+        ReportFiltersFragment fragment = ReportFiltersFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.activity_relatorio_container, fragment)

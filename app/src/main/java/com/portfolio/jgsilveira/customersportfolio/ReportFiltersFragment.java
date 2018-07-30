@@ -38,12 +38,12 @@ import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FiltersFragment#newInstance} factory method to
+ * Use the {@link ReportFiltersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FiltersFragment extends Fragment {
+public class ReportFiltersFragment extends Fragment {
 
-    private static final String TAG = "FiltersFragment";
+    private static final String TAG = "ReportFiltersFragment";
 
     private ReportViewModel mViewModel;
 
@@ -71,7 +71,7 @@ public class FiltersFragment extends Fragment {
 
     private EditText mEditTextDocument;
 
-    public FiltersFragment() {
+    public ReportFiltersFragment() {
         // Required empty public constructor
     }
 
@@ -79,10 +79,10 @@ public class FiltersFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment FiltersFragment.
+     * @return A new instance of fragment ReportFiltersFragment.
      */
-    public static FiltersFragment newInstance() {
-        FiltersFragment fragment = new FiltersFragment();
+    public static ReportFiltersFragment newInstance() {
+        ReportFiltersFragment fragment = new ReportFiltersFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -93,23 +93,18 @@ public class FiltersFragment extends Fragment {
         FragmentActivity activity = Objects.requireNonNull(getActivity());
         mViewModel = ViewModelProviders.of(activity).get(ReportViewModel.class);
         mViewModel.getHasResultado().observe(this, new HasResultObserver());
+        mViewModel.getLiveDataFilters().observe(this, new FiltersObserver());
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_filters, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_report_filters, container, false);
         initReferences(rootView);
         initListeners();
         mSpinnerState.setAdapter(newAdapter(mViewModel.getStates()));
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        displayFilters();
-        super.onResume();
     }
 
     @NonNull
@@ -167,7 +162,7 @@ public class FiltersFragment extends Fragment {
         if (filters.getStartDate() == null) {
             mTextViewRegisteredFrom.setText(StringUtil.VAZIO);
         } else {
-            mTextViewRegisteredTo.setText(DateUtil.formatDateMedium(filters.getStartDate()));
+            mTextViewRegisteredFrom.setText(DateUtil.formatDateMedium(filters.getStartDate()));
         }
         if (filters.getEndDate() == null) {
             mTextViewRegisteredTo.setText(StringUtil.VAZIO);
@@ -253,7 +248,7 @@ public class FiltersFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             ReportFilters filtro = mViewModel.getFilters();
-            Date date = DateUtil.createDate(year, month, dayOfMonth, 23, 59, 59);
+            Date date = DateUtil.createDate(year, month, dayOfMonth);
             filtro.setStartDate(date);
             mTextViewRegisteredFrom.setText(DateUtil.formatDateMedium(filtro.getStartDate()));
         }
@@ -265,7 +260,7 @@ public class FiltersFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             ReportFilters filtro = mViewModel.getFilters();
-            Date date = DateUtil.createDate(year, month, dayOfMonth);
+            Date date = DateUtil.createDate(year, month, dayOfMonth, 23, 59, 59);
             filtro.setEndDate(date);
             mTextViewRegisteredTo.setText(DateUtil.formatDateMedium(filtro.getEndDate()));
         }
@@ -431,6 +426,18 @@ public class FiltersFragment extends Fragment {
         public void onChanged(@Nullable Boolean aBoolean) {
             boolean hasResult = aBoolean != null && aBoolean;
             mButtonVisuelize.setEnabled(hasResult);
+        }
+
+    }
+
+    private class FiltersObserver implements Observer<ReportFilters> {
+
+        @Override
+        public void onChanged(@Nullable ReportFilters filters) {
+            boolean nonNull = filters != null;
+            if (nonNull) {
+                displayFilters();
+            }
         }
 
     }

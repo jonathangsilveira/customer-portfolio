@@ -85,7 +85,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             List<EnumStates> estados = mViewModel.getEstados().getValue();
             if (estados != null) {
                 EnumStates selecionado = estados.get(position);
-                AppSettings.putState(selecionado.getSigla());
+                AppSettings.putState(selecionado.getLowValue());
             }
         }
 
